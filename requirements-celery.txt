@@ -1,0 +1,12 @@
+wheel
+beautifulsoup4>=4.6.3
+celery>=4.2.1
+Django>=2.2.3
+mf2py>=1.1.2
+requests>=2.20.0
+
+# Tests
+colorama>=0.4.1
+django-nose>=1.4.6
+nose>=1.3.7
+pinocchio>=0.4.2

@@ -18,13 +18,13 @@ from mentions.util import split_url
 
 log = logging.getLogger(__name__)
 
-HTML_MENTION = '''
+HTML_MENTION = """
 <html>
 <head>
 </head>
 <body><a href="{target_url}">This mentions the target!</a></body>
 </html>
-'''
+"""
 
 
 class MockHttpClient:
@@ -43,7 +43,7 @@ class MockResponse:
     def __init__(self, response: HttpResponse):
         self.response = response
         self.headers = {
-            'content-type': response._content_type_for_repr,
+            "content-type": response._content_type_for_repr,
         }
         self.status_code = response.status_code
         self.text = response.content
@@ -59,14 +59,17 @@ class IncomingWebmentionsTests(TestCase):
         target = MentionableTestModel.objects.create(
             stub_id=self.target_id,
             slug=self.target_slug,
-            content='some html content',
-            allow_incoming_webmentions=True)
+            content="some html content",
+            allow_incoming_webmentions=True,
+        )
         target.save()
 
     def test_get_target_path(self):
         """Ensure that path is retrieved from url correctly."""
         scheme, domain, path = split_url(self.target_url)
-        self.assertEqual(reverse(constants.view_all_endpoints, args=[self.target_slug]), path)
+        self.assertEqual(
+            reverse(constants.view_all_endpoints, args=[self.target_slug]), path
+        )
 
     def test_get_target_object(self):
         """Ensure that database object is retrieved from url correctly."""
@@ -83,10 +86,13 @@ class IncomingWebmentionsTests(TestCase):
         source = MentionableTestModel.objects.create(
             stub_id=source_stub_id,
             slug=source_slug,
-            content=HTML_MENTION.format(target_url=self.target_url))
+            content=HTML_MENTION.format(target_url=self.target_url),
+        )
         source.save()
         source_url = functions.build_object_url(source_slug)
 
         self.assertIsNotNone(
             incoming_webmentions._get_incoming_source(
-                source_url, client=MockHttpClient(self.client)))
+                source_url, client=MockHttpClient(self.client)
+            )
+        )

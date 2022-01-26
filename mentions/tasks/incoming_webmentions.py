@@ -34,27 +34,27 @@ from mentions.util import (
 log = get_task_logger(__name__)
 
 
-class Notes:
+class _Notes:
     notes = []
 
-    def info(self, note) -> "Notes":
+    def info(self, note) -> "_Notes":
         log.info(note)
         self.notes.append(note)
         return self
 
-    def warn(self, note) -> "Notes":
+    def warn(self, note) -> "_Notes":
         log.warning(note)
         self.notes.append(note)
         return self
 
-    def join_to_string(self):
+    def join_to_string(self) -> str:
         return "\n".join(self.notes)
 
 
 def _update_wm(
     mention,
     target_object=None,
-    notes: Notes = None,
+    notes: _Notes = None,
     hcard: HCard = None,
     validated: bool = None,
     save: bool = False,
@@ -77,15 +77,14 @@ def _update_wm(
 
 
 @shared_task
-# def process_incoming_webmention(http_post: QueryDict, client_ip: str) -> None:
 def process_incoming_webmention(source: str, target: str, client_ip: str) -> None:
-    log.info(f"Processing webmention '{source} -> {target}'")
+    log.info(f"Processing webmention '{source}' -> '{target}'")
 
     wm = Webmention.create(source, target, sent_by=client_ip)
 
     # If anything fails, write it to notes and attach to webmention object
     # so it can be checked later
-    notes = Notes()
+    notes = _Notes()
 
     # Check that the target page is accessible on our server and fetch
     # the corresponding object.

@@ -42,4 +42,4 @@ DATABASES = {
 
 ROOT_URLCONF = "mentions.tests.config.test_urls"
 
-WEBMENTION_USE_CELERY = False
+WEBMENTIONS_USE_CELERY = False

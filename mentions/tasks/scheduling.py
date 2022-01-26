@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 
 def _use_celery():
-    return getattr(settings, "WEBMENTION_USE_CELERY", True)
+    return getattr(settings, "WEBMENTIONS_USE_CELERY", True)
 
 
 def handle_incoming_webmention(http_post: QueryDict, client_ip: str) -> None:
@@ -26,6 +26,7 @@ def handle_incoming_webmention(http_post: QueryDict, client_ip: str) -> None:
             target=target,
             client_ip=client_ip,
         )
+
     else:
         # Needs to be handled in manage.py task later
         PendingIncomingWebmention.objects.create(
@@ -40,14 +41,16 @@ def handle_outgoing_webmention(absolute_url: str, text: str) -> None:
 
     if use_celery:
         process_outgoing_webmentions.delay(absolute_url, text)
+
     else:
+        # Needs to be handled in manage.py task later
         PendingOutgoingContent.objects.create(
             absolute_url=absolute_url,
             text=text,
         )
 
 
-def handle_pending(incoming: bool = False, outgoing: bool = False):
+def handle_pending_webmentions(incoming: bool = False, outgoing: bool = False):
     """Process any pending webmentions as a batch.
 
     This may take a while as it may involve a lot of network requests, depending on the pending content.

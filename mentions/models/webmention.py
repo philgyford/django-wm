@@ -97,7 +97,7 @@ class PendingIncomingWebmention(MentionsBaseModel):
     """
     Temporary store of data about an incoming webmention.
 
-    Only used if settings.WEBMENTION_USE_CELERY is False.
+    Only used if settings.WEBMENTIONS_USE_CELERY is False.
 
     """
 

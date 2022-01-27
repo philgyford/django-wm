@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from mentions.tasks.scheduling import handle_pending
+from mentions.tasks.scheduling import handle_pending_webmentions
 
 
 class Command(BaseCommand):
@@ -23,4 +23,4 @@ class Command(BaseCommand):
             incoming = True
             outgoing = True
 
-        handle_pending(incoming=incoming, outgoing=outgoing)
+        handle_pending_webmentions(incoming=incoming, outgoing=outgoing)
